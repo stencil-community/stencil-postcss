@@ -1,11 +1,11 @@
 import * as postCss from 'postcss';
 
 module.exports = function postcss(
-  options: { plugins?: Array<postCss.AcceptedPlugin>} = {}
+  options: { plugins?: Array<postCss.AcceptedPlugin> } = {}
 ) {
   return {
     transform: function(sourceText: string, id: string, context: PluginCtx) {
-      if(!options.hasOwnProperty('plugins') || options.plugins.length < 1){
+      if (!options.hasOwnProperty('plugins') || options.plugins.length < 1) {
         return null;
       }
       if (!context || !usePlugin(id)) {
@@ -27,16 +27,13 @@ module.exports = function postcss(
           })
           .then(async postCssResults => {
             postCssResults.warnings().forEach(err => {
-              console.warn(err.toString());
+              loadDiagnostic(context, err, id);
               results.code = `/**  sass error${err.toString()}  **/`;
             });
             results.code = postCssResults.css;
-            console.log(results.code, results.id);
-            await context.fs.writeFile(results.id, results.code, {
-              inMemoryOnly: true
-            });
+            await context.fs.writeFile(results.id, results.code, {inMemoryOnly: true});
+            resolve(results);
           });
-        resolve(results);
       });
     },
     name: 'postCss'
