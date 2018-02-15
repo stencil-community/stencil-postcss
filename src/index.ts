@@ -47,7 +47,7 @@ module.exports = function postcss(
 };
 
 function usePlugin(id: string) {
-  return /(.css)$/i.test(id);
+  return /(.css|.pcss)$/i.test(id);
 }
 
 export interface PluginTransformResults {
