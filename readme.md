@@ -52,6 +52,25 @@ exports.config = {
 };
 ```
 
+### Inject Globals Paths
+
+The `injectGlobalPaths` config is an array of paths that automatically get added as `@import` declarations to all components. This can be useful to inject variables, mixins and functions to override defaults of external collections. Relative paths within `injectGlobalPaths` should be relative to the `stencil.config.js` file.
+
+```js
+exports.config = {
+  plugins: [
+    postcss({
+      injectGlobalPaths: [
+        'src/globals/variables.pcss',
+        'src/globals/mixins.pcss'
+      ]
+    })
+  ]
+};
+```
+
+Note that each of these files are always added to each component, so in most cases they shouldn't contain CSS because it'll get duplicated in each component. Instead, `injectGlobalPaths` should only be used for Sass variables, mixins and functions, but not contain any CSS.
+
 ## Related
 
 * [postcss](https://github.com/postcss/postcss)

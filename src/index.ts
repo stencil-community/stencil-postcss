@@ -17,6 +17,8 @@ module.exports = function postcss(opts: d.PluginOptions = {}) {
         return null;
       }
 
+      const renderOpts = util.getRenderOptions(opts, sourceText, context);
+
       const results: d.PluginTransformResults = {
         id: util.createResultsId(fileName)
       };
@@ -28,8 +30,8 @@ module.exports = function postcss(opts: d.PluginOptions = {}) {
 
       return new Promise<d.PluginTransformResults>(resolve => {
 
-        postCss(opts.plugins)
-          .process(sourceText, {
+        postCss(renderOpts.plugins)
+          .process(renderOpts.data, {
             from: fileName
           })
           .then(postCssResults => {
