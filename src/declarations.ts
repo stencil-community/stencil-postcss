@@ -1,10 +1,16 @@
 export interface PluginOptions {
+  injectGlobalPaths?: string[];
   plugins?: Array<any>;
 }
 
 export interface PluginTransformResults {
   code?: string;
   id?: string;
+}
+
+export interface RendererOptions {
+  data: string;
+  plugins: Array<any>;
 }
 
 export interface PluginCtx {
