@@ -10,7 +10,7 @@ export function loadDiagnostic(context: d.PluginCtx, postcssError: any, filePath
 
   const diagnostic: d.Diagnostic = {
     level,
-    type: 'postcss',
+    type: 'css',
     language: 'postcss',
     header: `postcss ${level}`,
     code: postcssError.status && postcssError.status.toString(),

@@ -4,11 +4,11 @@ import * as d from './declarations';
 import * as util from './util';
 
 
-module.exports = function postcss(opts: d.PluginOptions = {}) {
+export function postcss(opts: d.PluginOptions = {}) {
 
   return {
-
-    transform: function (sourceText: string, fileName: string, context: d.PluginCtx) {
+    name: 'postcss',
+    transform(sourceText: string, fileName: string, context: d.PluginCtx) {
       if (!opts.hasOwnProperty('plugins') || opts.plugins.length < 1) {
         return null;
       }
@@ -77,9 +77,6 @@ module.exports = function postcss(opts: d.PluginOptions = {}) {
             resolve(results);
           });
       });
-    },
-
-    name: 'postcss'
-
+    }
   };
-};
+}
