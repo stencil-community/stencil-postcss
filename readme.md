@@ -12,14 +12,16 @@ Next, within the project's `stencil.config.js` file, import the plugin and add
 it to the `plugins` config. In the example below we're using the `autoprefixer` postcss plugin, so you'll also have to run:
 
 ```
-npm install autoprefixer --save-dev
+npm install autoprefixer @types/autoprefixer --save-dev
 ```
 
-```js
-const postcss = require('@stencil/postcss');
-const autoprefixer = require('autoprefixer');
+#### stencil.config.ts
+```ts
+import { Config } from '@stencil/core';
+import { postcss } from '@stencil/postcss';
+import * as autoprefixer from 'autoprefixer';
 
-exports.config = {
+export const config: Config = {
   plugins: [
     postcss({
       plugins: [autoprefixer()]
