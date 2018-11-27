@@ -73,6 +73,10 @@ exports.config = {
 
 Note that each of these files are always added to each component, so in most cases they shouldn't contain CSS because it'll get duplicated in each component. Instead, `injectGlobalPaths` should only be used for Sass variables, mixins and functions, but not contain any CSS.
 
+## Valid file extensions
+
+This plugin will only transpile files whose extensions are `.css`, `.pcss`, or `.postcss`.
+
 ## Related
 
 * [postcss](https://github.com/postcss/postcss)
