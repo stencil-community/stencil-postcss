@@ -19,12 +19,12 @@ npm install autoprefixer @types/autoprefixer --save-dev
 ```ts
 import { Config } from '@stencil/core';
 import { postcss } from '@stencil/postcss';
-const LessPluginAutoPrefix = require('less-plugin-autoprefix');
+import autoprefixer from 'autoprefixer';
 
 export const config: Config = {
   plugins: [
     postcss({
-      plugins: [LessPluginAutoPrefix()]
+      plugins: [autoprefixer()]
     })
   ]
 };
