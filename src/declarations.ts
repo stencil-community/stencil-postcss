@@ -1,3 +1,5 @@
+import { ProcessOptions } from 'postcss';
+
 export interface PluginOptions {
   injectGlobalPaths?: string[];
   plugins?: Array<any>;
@@ -8,9 +10,15 @@ export interface PluginTransformResults {
   id?: string;
 }
 
-export interface RendererOptions {
+export interface RendererOptions extends ProcessOptions {
   data: string;
   plugins: Array<any>;
+}
+
+export interface RendererCtx {
+  env?: string;
+  file?: string;
+  options?: ProcessOptions;
 }
 
 export interface PluginCtx {

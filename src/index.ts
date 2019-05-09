@@ -3,12 +3,19 @@ import { loadDiagnostic } from './diagnostics';
 import * as d from './declarations';
 import * as util from './util';
 
-
-export function postcss(opts: d.PluginOptions = {}) {
-
+export function postcss(
+  opts: ((ctx: d.RendererCtx) => d.PluginOptions) | d.PluginOptions = {}
+) {
   return {
     name: 'postcss',
     transform(sourceText: string, fileName: string, context: d.PluginCtx) {
+      if (typeof opts === 'function') {
+        opts = opts({
+          env: process.env.NODE_ENV,
+          file: fileName
+        });
+      }
+
       if (!opts.hasOwnProperty('plugins') || opts.plugins.length < 1) {
         return null;
       }
@@ -29,7 +36,6 @@ export function postcss(opts: d.PluginOptions = {}) {
       }
 
       return new Promise<d.PluginTransformResults>(resolve => {
-
         postCss(renderOpts.plugins)
           .process(renderOpts.data, {
             from: fileName
@@ -52,7 +58,9 @@ export function postcss(opts: d.PluginOptions = {}) {
 
               const mappedWarnings = warnings
                 .map((warn: any) => {
-                  return `${warn.type} ${warn.plugin ? `(${warn.plugin})` : ''}: ${warn.text}`;
+                  return `${warn.type} ${
+                    warn.plugin ? `(${warn.plugin})` : ''
+                  }: ${warn.text}`;
                 })
                 .join(', ');
 
@@ -64,16 +72,20 @@ export function postcss(opts: d.PluginOptions = {}) {
               // write this css content to memory only so it can be referenced
               // later by other plugins (autoprefixer)
               // but no need to actually write to disk
-              context.fs.writeFile(results.id, results.code, { inMemoryOnly: true }).then(() => {
-                resolve(results);
-              });
+              context.fs
+                .writeFile(results.id, results.code, { inMemoryOnly: true })
+                .then(() => {
+                  resolve(results);
+                });
             }
 
             return results;
           })
           .catch((err: any) => {
             loadDiagnostic(context, err, fileName);
-            results.code = `/**  postcss error${err && err.message ? ': ' + err.message : ''}  **/`;
+            results.code = `/**  postcss error${
+              err && err.message ? ': ' + err.message : ''
+            }  **/`;
             resolve(results);
           });
       });
