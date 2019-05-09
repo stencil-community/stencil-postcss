@@ -20,7 +20,7 @@
     "test.watch": "jest --watch"
   },
   "dependencies": {
-    "postcss": "6.0.20"
+    "postcss": "^7.0.16"
   },
   "devDependencies": {
     "@types/jest": "^22.2.0",
