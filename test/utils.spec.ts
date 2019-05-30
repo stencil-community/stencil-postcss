@@ -45,6 +45,16 @@ describe('getRenderOptions', () => {
     expect(output.plugins).toHaveLength(0);
   });
 
+  it('should not break with undefined context', () => {
+    const input: d.PluginOptions = {
+      injectGlobalPaths: ['./my/global/variables.pcss']
+    };
+
+    expect(() => {
+      const output = util.getRenderOptions(input, undefined, undefined);
+    }).not.toThrow();
+  });
+
 });
 
 
