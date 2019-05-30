@@ -14,7 +14,7 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
         return null;
       }
 
-      if (!context || !util.usePlugin(fileName)) {
+      if (!util.usePlugin(fileName)) {
         return null;
       }
 
