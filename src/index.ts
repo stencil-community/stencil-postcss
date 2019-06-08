@@ -4,10 +4,11 @@ import * as d from './declarations';
 import * as util from './util';
 
 
-export function postcss(opts: d.PluginOptions = {}) {
+export function postcss(opts: d.PluginOptions = {}): d.Plugin {
 
   return {
     name: 'postcss',
+    pluginType: 'css',
     transform(sourceText: string, fileName: string, context: d.PluginCtx) {
       if (!opts.hasOwnProperty('plugins') || opts.plugins.length < 1) {
         return null;
