@@ -19,7 +19,7 @@ npm install autoprefixer @types/autoprefixer --save-dev
 ```ts
 import { Config } from '@stencil/core';
 import { postcss } from '@stencil/postcss';
-import * as autoprefixer from 'autoprefixer';
+import autoprefixer from 'autoprefixer';
 
 export const config: Config = {
   plugins: [
