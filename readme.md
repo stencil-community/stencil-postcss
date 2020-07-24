@@ -8,7 +8,7 @@ First, npm install within the project:
 npm install @stencil/postcss --save-dev
 ```
 
-Next, within the project's `stencil.config.js` file, import the plugin and add
+Next, within the project's `stencil.config.ts` file, import the plugin and add
 it to the `plugins` config. In the example below we're using the `autoprefixer` postcss plugin, so you'll also have to run:
 
 ```
