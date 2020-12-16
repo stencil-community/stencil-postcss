@@ -15,6 +15,8 @@ it to the `plugins` config. In the example below we're using the `autoprefixer` 
 npm install autoprefixer @types/autoprefixer --save-dev
 ```
 
+This plugin requires Node.js 14 or higher. For older Node versions, see the 1.x release.
+
 #### stencil.config.ts
 ```ts
 import { Config } from '@stencil/core';
