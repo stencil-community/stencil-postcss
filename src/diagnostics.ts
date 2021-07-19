@@ -16,7 +16,7 @@ export function loadDiagnostic(context: d.PluginCtx, postcssError: any, filePath
     code: postcssError.status && postcssError.status.toString(),
     relFilePath: null,
     absFilePath: null,
-    messageText: postcssError.reason,
+    messageText: postcssError.reason || postcssError.message || JSON.stringify(postcssError),
     lines: []
   };
 
