@@ -3,9 +3,7 @@ import { loadDiagnostic } from './diagnostics';
 import * as d from './declarations';
 import * as util from './util';
 
-
 export function postcss(opts: d.PluginOptions = {}): d.Plugin {
-
   return {
     name: 'postcss',
     pluginType: 'css',
@@ -21,7 +19,7 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
       const renderOpts = util.getRenderOptions(opts, sourceText, context);
 
       const results: d.PluginTransformResults = {
-        id: util.createResultsId(fileName)
+        id: util.createResultsId(fileName),
       };
 
       if (sourceText.trim() === '') {
@@ -29,13 +27,12 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
         return Promise.resolve(results);
       }
 
-      return new Promise<d.PluginTransformResults>(resolve => {
-
+      return new Promise<d.PluginTransformResults>((resolve) => {
         postCss(renderOpts.plugins)
           .process(renderOpts.data, {
-            from: fileName
+            from: fileName,
           })
-          .then(postCssResults => {
+          .then((postCssResults) => {
             const warnings = postCssResults.warnings();
 
             if (warnings.length > 0) {
@@ -45,7 +42,7 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
                   reason: warn.text,
                   level: warn.type,
                   column: warn.column || -1,
-                  line: warn.line || -1
+                  line: warn.line || -1,
                 };
 
                 loadDiagnostic(context, err, fileName);
@@ -78,6 +75,6 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
             resolve(results);
           });
       });
-    }
+    },
   };
 }
