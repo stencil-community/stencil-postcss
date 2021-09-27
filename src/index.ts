@@ -59,8 +59,17 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
             } else {
               results.code = postCssResults.css.toString();
               results.dependencies = postCssResults.messages
-                .filter(message => message.type === 'dependency')
-                .map(dependency => dependency.file);
+                .filter((message) => message.type === 'dependency')
+                .map((dependency) => dependency.file);
+
+              // TODO(#38) https://github.com/ionic-team/stencil-postcss/issues/38
+              // determining how to pass back the dir-dependency message helps
+              // enable JIT behavior, such as Tailwind.
+              //
+              // Pseudocode:
+              // results.dependencies = postCssResults.messages
+              //   .filter((message) => message.type === 'dir-dependency')
+              //   .map((dependency) => () => dependency.file);
 
               // write this css content to memory only so it can be referenced
               // later by other plugins (autoprefixer)

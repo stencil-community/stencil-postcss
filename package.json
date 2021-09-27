@@ -17,7 +17,9 @@
     "release": "np",
     "lint": "npm run lint.prettier",
     "lint.prettier": "prettier --write 'src/**/*.ts'",
-    "test": "jest && npm run test.prettier",
+    "test": "jest --coverage",
+    "test.ci": "npm run test.jest && npm run test.prettier",
+    "test.jest": "jest",
     "test.prettier": "prettier --check 'src/**/*.ts'",
     "test.watch": "jest --watch"
   },
@@ -62,7 +64,18 @@
       "json",
       "jsx"
     ],
-    "testURL": "http://localhost"
+    "testURL": "http://localhost",
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 69,
+        "functions": 70,
+        "lines": 70,
+        "statements": 70
+      }
+    }
   },
   "prettier": "@ionic/prettier-config"
 }
