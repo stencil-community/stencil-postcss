@@ -1,5 +1,4 @@
-import * as d from './declarations';
-
+import type * as d from './declarations';
 
 export function loadDiagnostic(context: d.PluginCtx, postcssError: any, filePath: string) {
   if (!postcssError || !context) {
@@ -16,8 +15,8 @@ export function loadDiagnostic(context: d.PluginCtx, postcssError: any, filePath
     code: postcssError.status && postcssError.status.toString(),
     relFilePath: null,
     absFilePath: null,
-    messageText: postcssError.reason,
-    lines: []
+    messageText: postcssError.reason || postcssError.message || JSON.stringify(postcssError),
+    lines: [],
   };
 
   if (filePath) {
@@ -35,7 +34,7 @@ export function loadDiagnostic(context: d.PluginCtx, postcssError: any, filePath
           lineNumber: postcssError.line,
           text: srcLines[postcssError.line - 1],
           errorCharStart: postcssError.column,
-          errorLength: 0
+          errorLength: 0,
         };
 
         for (let i = errorLine.errorCharStart; i >= 0; i--) {
@@ -65,7 +64,7 @@ export function loadDiagnostic(context: d.PluginCtx, postcssError: any, filePath
             lineNumber: errorLine.lineNumber - 1,
             text: srcLines[errorLine.lineIndex - 1],
             errorCharStart: -1,
-            errorLength: -1
+            errorLength: -1,
           };
 
           diagnostic.lines.unshift(previousLine);
@@ -77,22 +76,19 @@ export function loadDiagnostic(context: d.PluginCtx, postcssError: any, filePath
             lineNumber: errorLine.lineNumber + 1,
             text: srcLines[errorLine.lineIndex + 1],
             errorCharStart: -1,
-            errorLength: -1
+            errorLength: -1,
           };
 
           diagnostic.lines.push(nextLine);
         }
-
       } catch (e) {
         console.error(`StylePostcssPlugin loadDiagnostic, ${e}`);
       }
     }
-
   }
 
   context.diagnostics.push(diagnostic);
 }
-
 
 function formatFileName(rootDir: string, fileName: string) {
   if (!rootDir || !fileName) return '';
@@ -107,8 +103,13 @@ function formatFileName(rootDir: string, fileName: string) {
   return fileName;
 }
 
-
-function formatHeader(type: string, fileName: string, rootDir: string, startLineNumber: number = null, endLineNumber: number = null) {
+function formatHeader(
+  type: string,
+  fileName: string,
+  rootDir: string,
+  startLineNumber: number = null,
+  endLineNumber: number = null
+) {
   let header = `${type}: ${formatFileName(rootDir, fileName)}`;
 
   if (startLineNumber !== null && startLineNumber > 0) {
@@ -122,5 +123,29 @@ function formatHeader(type: string, fileName: string, rootDir: string, startLine
   return header;
 }
 
-
-const STOP_CHARS = ['', '\n', '\r', '\t', ' ', ':', ';', ',', '{', '}', '.', '#', '@', '!', '[', ']', '(', ')', '&', '+', '~', '^', '*', '$'];
+const STOP_CHARS = [
+  '',
+  '\n',
+  '\r',
+  '\t',
+  ' ',
+  ':',
+  ';',
+  ',',
+  '{',
+  '}',
+  '.',
+  '#',
+  '@',
+  '!',
+  '[',
+  ']',
+  '(',
+  ')',
+  '&',
+  '+',
+  '~',
+  '^',
+  '*',
+  '$',
+];

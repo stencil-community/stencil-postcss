@@ -1,16 +1,14 @@
 import postCss from 'postcss';
 import { loadDiagnostic } from './diagnostics';
-import * as d from './declarations';
+import type * as d from './declarations';
 import * as util from './util';
 
-
 export function postcss(opts: d.PluginOptions = {}): d.Plugin {
-
   return {
     name: 'postcss',
     pluginType: 'css',
     transform(sourceText: string, fileName: string, context: d.PluginCtx) {
-      if (!opts.hasOwnProperty('plugins') || opts.plugins.length < 1) {
+      if (!opts.hasOwnProperty('plugins') || opts.plugins.length === 0) {
         return null;
       }
 
@@ -21,7 +19,7 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
       const renderOpts = util.getRenderOptions(opts, sourceText, context);
 
       const results: d.PluginTransformResults = {
-        id: util.createResultsId(fileName)
+        id: util.createResultsId(fileName),
       };
 
       if (sourceText.trim() === '') {
@@ -29,13 +27,12 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
         return Promise.resolve(results);
       }
 
-      return new Promise<d.PluginTransformResults>(resolve => {
-
+      return new Promise<d.PluginTransformResults>((resolve) => {
         postCss(renderOpts.plugins)
           .process(renderOpts.data, {
-            from: fileName
+            from: fileName,
           })
-          .then(postCssResults => {
+          .then((postCssResults) => {
             const warnings = postCssResults.warnings();
 
             if (warnings.length > 0) {
@@ -45,7 +42,7 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
                   reason: warn.text,
                   level: warn.type,
                   column: warn.column || -1,
-                  line: warn.line || -1
+                  line: warn.line || -1,
                 };
 
                 loadDiagnostic(context, err, fileName);
@@ -61,6 +58,18 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
               resolve(results);
             } else {
               results.code = postCssResults.css.toString();
+              results.dependencies = postCssResults.messages
+                .filter((message) => message.type === 'dependency')
+                .map((dependency) => dependency.file);
+
+              // TODO(#38) https://github.com/ionic-team/stencil-postcss/issues/38
+              // determining how to pass back the dir-dependency message helps
+              // enable JIT behavior, such as Tailwind.
+              //
+              // Pseudocode:
+              // results.dependencies = postCssResults.messages
+              //   .filter((message) => message.type === 'dir-dependency')
+              //   .map((dependency) => () => dependency.file);
 
               // write this css content to memory only so it can be referenced
               // later by other plugins (autoprefixer)
@@ -78,6 +87,6 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
             resolve(results);
           });
       });
-    }
+    },
   };
 }

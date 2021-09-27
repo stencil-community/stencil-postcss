@@ -9,32 +9,37 @@
     "dist/"
   ],
   "scripts": {
-    "prebuild": "rimraf ./dist && npm run test && npm run lint",
-    "build": "tsc && npm run rollup",
+    "prebuild": "rimraf ./dist",
+    "build": "npm run prebuild && tsc && npm run rollup && npm run test",
     "watch": "tsc --watch",
-    "rollup": "rollup -c",
+    "rollup": "rollup -c rollup.config.js",
     "version": "npm run build",
     "release": "np",
-    "lint": "tslint --project tsconfig.json",
-    "test": "jest",
+    "lint": "npm run lint.prettier",
+    "lint.prettier": "prettier --write 'src/**/*.ts'",
+    "test": "jest --coverage",
+    "test.ci": "npm run test.jest && npm run test.prettier",
+    "test.jest": "jest",
+    "test.prettier": "prettier --check 'src/**/*.ts'",
     "test.watch": "jest --watch"
   },
   "dependencies": {
-    "postcss": "~8.2.1"
+    "autoprefixer": "^10.3.6",
+    "postcss": "~8.3.8"
   },
   "peerDependencies": {
-    "@stencil/core": ">=2.3.0"
+    "@stencil/core": ">=2.0.0"
   },
   "devDependencies": {
-    "@stencil/core": "^1.0.2",
+    "@ionic/prettier-config": "^2.0.0",
+    "@stencil/core": "^2.8.1",
     "@types/jest": "^26.0.19",
-    "@types/node": "^14.14.13",
+    "@types/node": "^14.17.18",
     "jest": "^26.6.3",
     "np": "^7.0.0",
+    "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.35.0",
-    "tslint": "^5.20.1",
-    "tslint-ionic-rules": "0.0.21",
     "typescript": "^4.1.3"
   },
   "repository": {
@@ -60,6 +65,10 @@
       "json",
       "jsx"
     ],
-    "testURL": "http://localhost"
-  }
+    "testURL": "http://localhost",
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}"
+    ]
+  },
+  "prettier": "@ionic/prettier-config"
 }
