@@ -1,6 +1,6 @@
 import postCss from 'postcss';
 import { loadDiagnostic } from './diagnostics';
-import * as d from './declarations';
+import type * as d from './declarations';
 import * as util from './util';
 
 export function postcss(opts: d.PluginOptions = {}): d.Plugin {
@@ -8,7 +8,7 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
     name: 'postcss',
     pluginType: 'css',
     transform(sourceText: string, fileName: string, context: d.PluginCtx) {
-      if (!opts.hasOwnProperty('plugins') || opts.plugins.length < 1) {
+      if (!opts.hasOwnProperty('plugins')) {
         return null;
       }
 

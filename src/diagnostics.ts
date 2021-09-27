@@ -1,4 +1,4 @@
-import * as d from './declarations';
+import type * as d from './declarations';
 
 export function loadDiagnostic(context: d.PluginCtx, postcssError: any, filePath: string) {
   if (!postcssError || !context) {
@@ -16,7 +16,7 @@ export function loadDiagnostic(context: d.PluginCtx, postcssError: any, filePath
     relFilePath: null,
     absFilePath: null,
     messageText: postcssError.reason || postcssError.message || JSON.stringify(postcssError),
-    lines: []
+    lines: [],
   };
 
   if (filePath) {
