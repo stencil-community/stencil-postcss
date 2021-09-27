@@ -15,7 +15,7 @@
     "rollup": "rollup -c rollup.config.js",
     "version": "npm run build",
     "release": "np",
-    "lint": "npm run prettier",
+    "lint": "npm run lint.prettier",
     "lint.prettier": "prettier --write 'src/**/*.ts'",
     "test": "jest && npm run test.prettier",
     "test.prettier": "prettier --check 'src/**/*.ts'",
@@ -25,7 +25,7 @@
     "postcss": "^8.3.8"
   },
   "peerDependencies": {
-    "@stencil/core": ">=2.3.0"
+    "@stencil/core": ">=2.0.0"
   },
   "devDependencies": {
     "@ionic/prettier-config": "^2.0.0",
