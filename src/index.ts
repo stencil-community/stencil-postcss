@@ -8,7 +8,7 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
     name: 'postcss',
     pluginType: 'css',
     transform(sourceText: string, fileName: string, context: d.PluginCtx) {
-      if (!opts.hasOwnProperty('plugins') || opts.plugins.length <= 1) {
+      if (!opts.hasOwnProperty('plugins') || opts.plugins.length === 0) {
         return null;
       }
 
