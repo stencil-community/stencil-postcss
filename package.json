@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "prebuild": "rimraf ./dist",
-    "build": "npm run prebuild && tsc && npm run test && npm run lint",
+    "build": "npm run prebuild && tsc && npm run rollup && npm run test",
     "watch": "tsc --watch",
     "rollup": "rollup -c rollup.config.js",
     "version": "npm run build",
