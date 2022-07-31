@@ -2,6 +2,8 @@ import postCss from 'postcss';
 import { loadDiagnostic } from './diagnostics';
 import type * as d from './declarations';
 import * as util from './util';
+import path from 'path';
+import glob from 'glob';
 
 export function postcss(opts: d.PluginOptions = {}): d.Plugin {
   return {
@@ -70,6 +72,13 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
               // results.dependencies = postCssResults.messages
               //   .filter((message) => message.type === 'dir-dependency')
               //   .map((dependency) => () => dependency.file);
+              let dirDependencies: string[][] = postCssResults.messages
+                .filter((message) => message.type === "dir-dependency")
+                .map((dependencyGlob) => {
+                  const fileGlob = dependencyGlob.glob ? path.join(dependencyGlob.dir, dependencyGlob.glob) : path.join(dependencyGlob.dir, "**", "*");
+                  return glob.sync(fileGlob);
+                  });
+              results.dependencies.concat(...dirDependencies); // The dirDep endencies array is 2D, since each glob will resolve to a file list.
 
               // write this css content to memory only so it can be referenced
               // later by other plugins (autoprefixer)
