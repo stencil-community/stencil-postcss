@@ -64,21 +64,14 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
                 .filter((message) => message.type === 'dependency')
                 .map((dependency) => dependency.file);
 
-              // TODO(#38) https://github.com/ionic-team/stencil-postcss/issues/38
-              // determining how to pass back the dir-dependency message helps
-              // enable JIT behavior, such as Tailwind.
-              //
-              // Pseudocode:
-              // results.dependencies = postCssResults.messages
-              //   .filter((message) => message.type === 'dir-dependency')
-              //   .map((dependency) => () => dependency.file);
-              let dirDependencies: string[][] = postCssResults.messages
+              const dirDependencies: string[][] = postCssResults.messages
                 .filter((message) => message.type === "dir-dependency")
                 .map((dependencyGlob) => {
-                  const fileGlob = dependencyGlob.glob ? path.join(dependencyGlob.dir, dependencyGlob.glob) : path.join(dependencyGlob.dir, "**", "*");
-                  return glob.sync(fileGlob);
+                  const fileGlob: string = dependencyGlob.glob ? path.join(dependencyGlob.dir, dependencyGlob.glob)
+                                                               : path.join(dependencyGlob.dir, "**", "*");
+                  return glob.sync(fileGlob.replace(/\\/g, '/')); // Make sure that windows paths get transformed to POSIX style
                   });
-              results.dependencies.concat(...dirDependencies); // The dirDep endencies array is 2D, since each glob will resolve to a file list.
+              results.dependencies.concat(...dirDependencies); // The dirDependencies array is 2D, since each glob will resolve to a file list.
 
               // write this css content to memory only so it can be referenced
               // later by other plugins (autoprefixer)
