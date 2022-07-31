@@ -2,8 +2,8 @@ import postCss from 'postcss';
 import { loadDiagnostic } from './diagnostics';
 import type * as d from './declarations';
 import * as util from './util';
-import path from 'path';
-import glob from 'glob';
+//import path from 'path';
+//import glob from 'glob';
 
 export function postcss(opts: d.PluginOptions = {}): d.Plugin {
   return {
@@ -16,6 +16,19 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
 
       if (!context || !util.usePlugin(fileName)) {
         return null;
+      }
+
+      // Workaround for JIT handling of i.e. Tailwind: Read the source text from the CSS indepent from Stencil,
+      // in order to always get the raw input file.
+      if(opts.hasOwnProperty('alwaysParseNonCachedCss') && opts.alwaysParseNonCachedCss)
+      {
+        try {
+          sourceText = context.sys.readFileSync(fileName); // Read non-cached variant
+        }
+        catch(ex)
+        {
+          console.error("Reading the source CSS file from path " + fileName + " failed");
+        }
       }
 
       const renderOpts = util.getRenderOptions(opts, sourceText, context);
@@ -60,18 +73,7 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
               resolve(results);
             } else {
               results.code = postCssResults.css.toString();
-              results.dependencies = postCssResults.messages
-                .filter((message) => message.type === 'dependency')
-                .map((dependency) => dependency.file);
-
-              const dirDependencies: string[][] = postCssResults.messages
-                .filter((message) => message.type === "dir-dependency")
-                .map((dependencyGlob) => {
-                  const fileGlob: string = dependencyGlob.glob ? path.join(dependencyGlob.dir, dependencyGlob.glob)
-                                                               : path.join(dependencyGlob.dir, "**", "*");
-                  return glob.sync(fileGlob.replace(/\\/g, '/')); // Make sure that windows paths get transformed to POSIX style
-                  });
-              results.dependencies.concat(...dirDependencies); // The dirDependencies array is 2D, since each glob will resolve to a file list.
+              results.dependencies = []; // Can be left empty, since JIT with other Frameworks works after using non-cached CSS source.
 
               // write this css content to memory only so it can be referenced
               // later by other plugins (autoprefixer)
