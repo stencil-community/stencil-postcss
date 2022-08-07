@@ -1,11 +1,11 @@
-# @stencil/postcss
+# @stencil-community/postcss
 
 This package is used in order to integrate with postcss and all of its plugins.
 
 First, npm install within the project:
 
 ```
-npm install @stencil/postcss --save-dev
+npm install @stencil-community/postcss --save-dev
 ```
 
 Next, within the project's `stencil.config.ts` file, import the plugin and add
@@ -20,7 +20,7 @@ This plugin requires Node.js 14 or higher. For older Node versions, see the 1.x 
 #### stencil.config.ts
 ```ts
 import { Config } from '@stencil/core';
-import { postcss } from '@stencil/postcss';
+import { postcss } from '@stencil-community/postcss';
 import autoprefixer from 'autoprefixer';
 
 export const config: Config = {
