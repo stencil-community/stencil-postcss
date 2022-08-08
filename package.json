@@ -1,5 +1,5 @@
 {
-  "name": "@stencil/postcss",
+  "name": "@stencil-community/postcss",
   "version": "2.1.0",
   "license": "MIT",
   "main": "dist/index.cjs.js",
