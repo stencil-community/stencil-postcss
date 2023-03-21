@@ -28,7 +28,7 @@
     "postcss": "~8.3.8"
   },
   "peerDependencies": {
-    "@stencil/core": ">=2.0.0"
+    "@stencil/core": ">=2.0.0 || >=3.0.0"
   },
   "devDependencies": {
     "@ionic/prettier-config": "^2.0.0",
