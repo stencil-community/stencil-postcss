@@ -44,7 +44,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ionic-team/stencil-postcss.git"
+    "url": "git+https://github.com/stencil-community/stencil-postcss.git"
   },
   "author": "Ionic Team",
   "homepage": "https://stenciljs.com/",
