@@ -51,6 +51,7 @@
   "description": "The Stencil PostCSS Plugin",
   "keywords": [
     "stencil",
+    "stencil-community",
     "postcss"
   ],
   "jest": {
