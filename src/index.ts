@@ -71,15 +71,8 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
               //   .filter((message) => message.type === 'dir-dependency')
               //   .map((dependency) => () => dependency.file);
 
-              // write this css content to memory only so it can be referenced
-              // later by other plugins (autoprefixer)
-              // but no need to actually write to disk
-              context.fs.writeFile(results.id, results.code, { inMemoryOnly: true }).then(() => {
-                resolve(results);
-              });
+              resolve(results);
             }
-
-            return results;
           })
           .catch((err: any) => {
             loadDiagnostic(context, err, fileName);
