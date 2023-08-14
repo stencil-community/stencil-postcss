@@ -2,6 +2,8 @@ import postCss from 'postcss';
 import { loadDiagnostic } from './diagnostics';
 import type * as d from './declarations';
 import * as util from './util';
+//import path from 'path';
+//import glob from 'glob';
 
 export function postcss(opts: d.PluginOptions = {}): d.Plugin {
   return {
@@ -14,6 +16,19 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
 
       if (!context || !util.usePlugin(fileName)) {
         return null;
+      }
+
+      // Workaround for JIT handling of i.e. Tailwind: Read the source text from the CSS indepent from Stencil,
+      // in order to always get the raw input file.
+      if(opts.hasOwnProperty('alwaysParseNonCachedCss') && opts.alwaysParseNonCachedCss)
+      {
+        try {
+          sourceText = context.sys.readFileSync(fileName); // Read non-cached variant
+        }
+        catch(ex)
+        {
+          console.error("Reading the source CSS file from path " + fileName + " failed");
+        }
       }
 
       const renderOpts = util.getRenderOptions(opts, sourceText, context);
@@ -58,18 +73,7 @@ export function postcss(opts: d.PluginOptions = {}): d.Plugin {
               resolve(results);
             } else {
               results.code = postCssResults.css.toString();
-              results.dependencies = postCssResults.messages
-                .filter((message) => message.type === 'dependency')
-                .map((dependency) => dependency.file);
-
-              // TODO(#38) https://github.com/ionic-team/stencil-postcss/issues/38
-              // determining how to pass back the dir-dependency message helps
-              // enable JIT behavior, such as Tailwind.
-              //
-              // Pseudocode:
-              // results.dependencies = postCssResults.messages
-              //   .filter((message) => message.type === 'dir-dependency')
-              //   .map((dependency) => () => dependency.file);
+              results.dependencies = []; // Can be left empty, since JIT with other Frameworks works after using non-cached CSS source.
 
               resolve(results);
             }
