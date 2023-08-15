@@ -108,7 +108,7 @@ function formatHeader(
   fileName: string,
   rootDir: string,
   startLineNumber: number = null,
-  endLineNumber: number = null
+  endLineNumber: number = null,
 ) {
   let header = `${type}: ${formatFileName(rootDir, fileName)}`;
 
