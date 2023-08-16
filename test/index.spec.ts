@@ -3,8 +3,7 @@ import { postcss } from '../src/index';
 import * as autoprefixer from 'autoprefixer';
 
 describe('postcss', () => {
-  const dummyPlugin = () => null;
-  const context: d.PluginCtx = {
+  const context = {
     config: {
       rootDir: '/Users/my/app/',
       srcDir: '/Users/my/app/src/',
@@ -14,7 +13,7 @@ describe('postcss', () => {
       readFileSync: () => undefined,
     },
     diagnostics: [],
-  };
+  } as unknown as d.PluginCtx;
 
   it('should return a rollup plugin', () => {
     const plugin = postcss({
@@ -30,7 +29,7 @@ describe('postcss', () => {
 
     const input = `:host { color: red; }`;
 
-    const result = await plugin.transform(input, 'one.mdx', context);
+    const result = await plugin.transform?.(input, 'one.mdx', context);
 
     expect(result).toBe(null);
   });
@@ -42,7 +41,7 @@ describe('postcss', () => {
 
     const input = `:host { color: red; }`;
 
-    const result = await plugin.transform(input, 'one.mdx', context);
+    const result = await plugin.transform?.(input, 'one.mdx', context);
 
     expect(result).toBe(null);
   });
@@ -54,7 +53,7 @@ describe('postcss', () => {
 
     const input = `:host { color: red; }`;
 
-    const result = await plugin.transform(input, 'file.css', context);
+    const result = await plugin.transform?.(input, 'file.css', context);
 
     expect(result).toMatchObject({
       code: ':host { color: red; }',
@@ -71,11 +70,11 @@ describe('postcss', () => {
 
     const input = `:host {display: -webkit-box`;
 
-    const result = await plugin.transform(input, 'file.css', context);
+    const result = await plugin.transform?.(input, 'file.css', context);
 
     expect(consoleSpy).toHaveBeenCalled();
 
     expect(result).toBeInstanceOf(Object);
-    expect(result.code).toContain('/**  postcss error: ');
+    expect((result as d.PluginTransformResults).code).toContain('/**  postcss error: ');
   });
 });
