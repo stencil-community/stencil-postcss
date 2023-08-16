@@ -3,7 +3,6 @@ import * as util from '../src/util';
 
 describe('getRenderOptions', () => {
   const sourceText = 'body { color: blue; }';
-  const fileName = '/some/path/file-name.scss';
   const context: d.PluginCtx = {
     config: {
       rootDir: '/Users/my/app/',
@@ -11,7 +10,7 @@ describe('getRenderOptions', () => {
     },
     fs: {},
     diagnostics: [],
-  };
+  } as unknown as d.PluginCtx;
   const dummyPlugin = () => null;
 
   it('should inject plugins array and not change input options', () => {
@@ -20,9 +19,9 @@ describe('getRenderOptions', () => {
     };
     const output = util.getRenderOptions(input, sourceText, context);
     expect(output.plugins).toHaveLength(1);
-    expect(output.plugins[0]).toBe(dummyPlugin);
+    expect(output.plugins?.[0]).toBe(dummyPlugin);
     expect(input.plugins).toHaveLength(1);
-    expect(input.plugins[0]).toBe(dummyPlugin);
+    expect(input.plugins?.[0]).toBe(dummyPlugin);
   });
 
   it('should inject global postcss array and not change input options or include globals in output opts', () => {
@@ -32,7 +31,7 @@ describe('getRenderOptions', () => {
     const output = util.getRenderOptions(input, sourceText, context);
     expect(output.data).toBe(`@import "/my/global/variables.pcss";body { color: blue; }`);
     expect(input.injectGlobalPaths).toHaveLength(1);
-    expect(input.injectGlobalPaths[0]).toBe('/my/global/variables.pcss');
+    expect(input.injectGlobalPaths?.[0]).toBe('/my/global/variables.pcss');
   });
 
   it('should inject global postcss array and modify relative paths', () => {
@@ -42,12 +41,12 @@ describe('getRenderOptions', () => {
     const output = util.getRenderOptions(input, sourceText, context);
     expect(output.data).toBe(`@import "/Users/my/variables.pcss";body { color: blue; }`);
     expect(input.injectGlobalPaths).toHaveLength(1);
-    expect(input.injectGlobalPaths[0]).toBe('../variables.pcss');
+    expect(input.injectGlobalPaths?.[0]).toBe('../variables.pcss');
   });
 
   it('should set empty options by default', () => {
     const input = {};
-    const output = util.getRenderOptions(input, undefined, context);
+    const output = util.getRenderOptions(input, '', context);
     expect(output.data).toBe('');
     expect(output.plugins).toHaveLength(0);
   });
