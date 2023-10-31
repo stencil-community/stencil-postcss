@@ -47,7 +47,7 @@ exports.config = {
     postcss({
       plugins: [
         autoprefixer({
-          browsers: ['last 6 versions'],
+          overrideBrowserslist: ['last 6 versions'],
           cascade: false
         })
       ]
